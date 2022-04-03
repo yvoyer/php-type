@@ -18,6 +18,9 @@ final class ValueGuesserTest extends TestCase
         self::assertSame($expected, ValueGuesser::fromMixed($value)->toInteger());
     }
 
+    /**
+     * @return mixed[]
+     */
     public static function provideToIntegerValues(): array
     {
         return [
@@ -32,7 +35,7 @@ final class ValueGuesserTest extends TestCase
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      * @param string $expectedString
      * @dataProvider provideToStringValues
      */
@@ -44,6 +47,9 @@ final class ValueGuesserTest extends TestCase
         );
     }
 
+    /**
+     * @return mixed[]
+     */
     public static function provideToStringValues(): array
     {
         return [
@@ -58,7 +64,7 @@ final class ValueGuesserTest extends TestCase
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      * @param float $expected
      * @dataProvider provideToFloatValues
      */
@@ -67,6 +73,9 @@ final class ValueGuesserTest extends TestCase
         self::assertSame($expected, ValueGuesser::fromMixed($value)->toFloat());
     }
 
+    /**
+     * @return mixed[]
+     */
     public static function provideToFloatValues(): array
     {
         return [
@@ -82,7 +91,7 @@ final class ValueGuesserTest extends TestCase
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      * @param bool $expected
      * @dataProvider provideToBoolValues
      */
@@ -91,6 +100,9 @@ final class ValueGuesserTest extends TestCase
         self::assertSame($expected, ValueGuesser::fromMixed($value)->toBool());
     }
 
+    /**
+     * @return mixed[]
+     */
     public static function provideToBoolValues(): array
     {
         return [
