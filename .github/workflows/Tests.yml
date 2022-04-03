@@ -1,4 +1,4 @@
-name: PHP >=7.0
+name: Library tests
 
 on:
   push:

@@ -7,6 +7,7 @@ use function gettype;
 use function is_bool;
 use function is_float;
 use function is_numeric;
+use function is_object;
 use function is_string;
 use function sprintf;
 
@@ -35,7 +36,7 @@ final class ValueGuesser
         }
 
         $type = gettype($value);
-        if ($type === 'object') {
+        if (is_object($value)) {
             $type = sprintf('object(%s)', get_class($value));
         }
 
