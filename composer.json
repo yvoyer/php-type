@@ -1,5 +1,6 @@
 {
     "name": "star/types",
+    "description": "Package to wrap basic php types behind a common interface",
     "type": "library",
     "minimum-stability": "stable",
     "require": {
