@@ -8,59 +8,111 @@ use Star\Component\Type\ValueGuesser;
 
 final class ValueGuesserTest extends TestCase
 {
-    public function test_it_should_support_integer(): void
+    /**
+     * @param mixed $value
+     * @param int $expected
+     * @dataProvider provideToIntegerValues
+     */
+    public function test_it_should_mixed_to_integer($value, int $expected): void
     {
-        $value = ValueGuesser::fromMixed(1);
-        self::assertSame('1', $value->toString());
-        self::assertSame(1, $value->toInteger());
-        self::assertSame(1.0, $value->toFloat());
-        self::assertTrue($value->toBool());
-        self::assertFalse($value->isEmpty());
-
-        $value = ValueGuesser::fromMixed(0);
-        self::assertSame('0', $value->toString());
-        self::assertSame(0, $value->toInteger());
-        self::assertSame(0.0, $value->toFloat());
-        self::assertFalse($value->toBool());
-        self::assertFalse($value->isEmpty());
-
-        $value = ValueGuesser::fromMixed(2);
-        self::assertSame('2', $value->toString());
-        self::assertSame(2, $value->toInteger());
-        self::assertSame(2.0, $value->toFloat());
-        self::assertFalse($value->isEmpty());
+        self::assertSame($expected, ValueGuesser::fromMixed($value)->toInteger());
     }
 
-    public function test_it_should_support_string(): void
+    /**
+     * @return mixed[]
+     */
+    public static function provideToIntegerValues(): array
     {
-        $value = ValueGuesser::fromMixed('string');
-        self::assertSame('string', $value->toString());
-        self::assertFalse($value->isEmpty());
+        return [
+            'int-max to int' => [PHP_INT_MAX, PHP_INT_MAX],
+            'int-min to int' => [PHP_INT_MIN, PHP_INT_MIN],
+            'float to int' => [12.0, 12],
+            'true to int' => [true, 1],
+            'false to int' => [false, 0],
+            'string-int to int' => ['123', 123],
+            'string-float to int' => ['123.0', 123],
+        ];
     }
 
-    public function test_it_should_support_float(): void
+    /**
+     * @param mixed $value
+     * @param string $expectedString
+     * @dataProvider provideToStringValues
+     */
+    public function test_it_should_support_mixed_value_to_string($value, string $expectedString): void
     {
-        $value = ValueGuesser::fromMixed(12.34);
-        self::assertSame('12.34', $value->toString());
-        self::assertSame(12.34, $value->toFloat());
-        self::assertFalse($value->isEmpty());
+        self::assertSame(
+            $expectedString,
+            ValueGuesser::fromMixed($value)->toString()
+        );
     }
 
-    public function test_it_should_support_boolean(): void
+    /**
+     * @return mixed[]
+     */
+    public static function provideToStringValues(): array
     {
-        $value = ValueGuesser::fromMixed(false);
-        self::assertSame('0', $value->toString());
-        self::assertSame(0, $value->toInteger());
-        self::assertSame(0.0, $value->toFloat());
-        self::assertFalse($value->toBool());
-        self::assertFalse($value->isEmpty());
+        return [
+            'int-max to string' => [PHP_INT_MAX, (string) PHP_INT_MAX],
+            'int-min to string' => [PHP_INT_MIN, (string) PHP_INT_MIN],
+            'float-max to string' => [PHP_FLOAT_MAX, (string) PHP_FLOAT_MAX],
+            'float-min to string' => [PHP_FLOAT_MIN, (string) PHP_FLOAT_MIN],
+            'true to string' => [true, '1'],
+            'false to string' => [false, '0'],
+            'string to string' => ['string', 'string'],
+        ];
+    }
 
-        $value = ValueGuesser::fromMixed(true);
-        self::assertSame('1', $value->toString());
-        self::assertSame(1, $value->toInteger());
-        self::assertSame(1.0, $value->toFloat());
-        self::assertTrue($value->toBool());
-        self::assertFalse($value->isEmpty());
+    /**
+     * @param mixed $value
+     * @param float $expected
+     * @dataProvider provideToFloatValues
+     */
+    public function test_it_should_support_mixed_to_float($value, float $expected): void
+    {
+        self::assertSame($expected, ValueGuesser::fromMixed($value)->toFloat());
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public static function provideToFloatValues(): array
+    {
+        return [
+            'int-max to float' => [PHP_INT_MAX, PHP_INT_MAX],
+            'int-min to float' => [PHP_INT_MIN, PHP_INT_MIN],
+            'float-max to float' => [PHP_FLOAT_MAX, PHP_FLOAT_MAX],
+            'float-min to float' => [PHP_FLOAT_MIN, PHP_FLOAT_MIN],
+            'true to float' => [true, 1.0],
+            'false to float' => [false, 0.0],
+            'string-float to float' => ['12.34', 12.34],
+            'string-int to float' => ['12', 12.0],
+        ];
+    }
+
+    /**
+     * @param mixed $value
+     * @param bool $expected
+     * @dataProvider provideToBoolValues
+     */
+    public function test_it_should_support_mixed_to_boolean($value, bool $expected): void
+    {
+        self::assertSame($expected, ValueGuesser::fromMixed($value)->toBool());
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public static function provideToBoolValues(): array
+    {
+        return [
+            'int-max to bool' => [0, false],
+            'int-min to bool' => [1, true],
+            'float-max to bool' => ['0.0', false],
+            'float-min to bool' => ['1.0', true],
+            'true to bool' => [true, true],
+            'false to bool' => [false, false],
+        ];
     }
 
     public function test_it_should_not_support_object(): void
@@ -82,5 +134,10 @@ final class ValueGuesserTest extends TestCase
         $this->expectException(NotSupportedValueType::class);
         $this->expectExceptionMessage('Value of type "object(Closure)" is not supported yet.');
         ValueGuesser::fromMixed(function () {});
+    }
+
+    public function test_it_should_support_null_value(): void
+    {
+        self::assertSame('', ValueGuesser::fromMixed(null)->toString());
     }
 }

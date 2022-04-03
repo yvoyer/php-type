@@ -19,12 +19,16 @@ final class ValueGuesser
      */
     public static function fromMixed($value): Value
     {
+        if (\is_null($value)) {
+            return new NullValue();
+        }
+
         if (is_numeric($value)) {
-            if (is_float($value)) {
-                return FloatValue::fromFloat((float) $value);
+            if ((int) $value == $value) {
+                return IntegerValue::fromInteger((int) $value);
             }
 
-            return IntegerValue::fromInteger((int) $value);
+            return FloatValue::fromFloat((float) $value);
         }
 
         if (is_bool($value)) {
