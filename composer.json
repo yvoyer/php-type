@@ -1,5 +1,5 @@
 {
-    "name": "star/types",
+    "name": "star/php-type",
     "description": "Package to wrap basic php types behind a common interface",
     "type": "library",
     "license": "MIT",
