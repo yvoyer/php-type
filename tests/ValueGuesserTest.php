@@ -123,4 +123,9 @@ final class ValueGuesserTest extends TestCase
         $this->expectExceptionMessage('Value of type "object(Closure)" is not supported yet.');
         ValueGuesser::fromMixed(function () {});
     }
+
+    public function test_it_should_support_null_value(): void
+    {
+        self::assertSame('', ValueGuesser::fromMixed(null)->toString());
+    }
 }
