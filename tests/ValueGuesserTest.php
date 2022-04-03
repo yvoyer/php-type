@@ -66,21 +66,21 @@ final class ValueGuesserTest extends TestCase
     public function test_it_should_not_support_object(): void
     {
         $this->expectException(NotSupportedValueType::class);
-        $this->expectExceptionMessage('dsa');
+        $this->expectExceptionMessage('Value of type "object(stdClass)" is not supported yet.');
         ValueGuesser::fromMixed((object) []);
     }
 
     public function test_it_should_not_support_array(): void
     {
         $this->expectException(NotSupportedValueType::class);
-        $this->expectExceptionMessage('dsa');
+        $this->expectExceptionMessage('Value of type "array" is not supported yet.');
         ValueGuesser::fromMixed([]);
     }
 
     public function test_it_should_not_support_callable(): void
     {
         $this->expectException(NotSupportedValueType::class);
-        $this->expectExceptionMessage('dsa');
+        $this->expectExceptionMessage('Value of type "object(Closure)" is not supported yet.');
         ValueGuesser::fromMixed(function () {});
     }
 }

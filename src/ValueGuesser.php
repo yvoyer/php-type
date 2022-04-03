@@ -2,6 +2,7 @@
 
 namespace Star\Component\Type;
 
+use function get_class;
 use function gettype;
 use function is_bool;
 use function is_float;
@@ -33,10 +34,15 @@ final class ValueGuesser
             return StringValue::fromString($value);
         }
 
+        $type = gettype($value);
+        if ($type === 'object') {
+            $type = sprintf('object(%s)', get_class($value));
+        }
+
         throw new NotSupportedValueType(
             sprintf(
                 'Value of type "%s" is not supported yet.',
-                gettype($value)
+                $type
             )
         );
     }
