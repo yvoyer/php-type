@@ -32,4 +32,6 @@ interface Value
      * @return bool
      */
     public function isEmpty(): bool;
+
+    public function acceptValueVisitor(ValueVisitor $visitor): void;
 }

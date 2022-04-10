@@ -5,6 +5,7 @@ namespace Star\Component\Type\Tests;
 use PHPUnit\Framework\TestCase;
 use Star\Component\Type\IntegerValue;
 use Star\Component\Type\NotSupportedTypeConversion;
+use Star\Component\Type\ValueVisitor;
 
 final class IntegerValueTest extends TestCase
 {
@@ -28,5 +29,17 @@ final class IntegerValueTest extends TestCase
     {
         self::assertTrue(IntegerValue::fromInteger(1)->toBool());
         self::assertFalse(IntegerValue::fromInteger(0)->toBool());
+    }
+
+    public function test_it_should_visit_value(): void
+    {
+        $value = IntegerValue::fromInteger(123);
+        $visitor = $this->createMock(ValueVisitor::class);
+        $visitor
+            ->expects(self::once())
+            ->method('visitIntegerValue')
+            ->with(123);
+
+        $value->acceptValueVisitor($visitor);
     }
 }

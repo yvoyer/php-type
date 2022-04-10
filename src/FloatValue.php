@@ -46,6 +46,11 @@ final class FloatValue implements Value
         return false;
     }
 
+    public function acceptValueVisitor(ValueVisitor $visitor): void
+    {
+        $visitor->visitFloatValue($this->value);
+    }
+
     public static function fromFloat(float $value): Value
     {
         return new self($value);

@@ -5,6 +5,7 @@ namespace Star\Component\Type\Tests;
 use PHPUnit\Framework\TestCase;
 use Star\Component\Type\FloatValue;
 use Star\Component\Type\NotSupportedTypeConversion;
+use Star\Component\Type\ValueVisitor;
 
 final class FloatValueTest extends TestCase
 {
@@ -32,5 +33,17 @@ final class FloatValueTest extends TestCase
     public function test_it_should_allow_float_without_decimal_to_int_conversion(): void
     {
         self::assertSame(12, FloatValue::fromFloat(12.0)->toInteger());
+    }
+
+    public function test_it_should_visit_value(): void
+    {
+        $value = FloatValue::fromFloat(12.34);
+        $visitor = $this->createMock(ValueVisitor::class);
+        $visitor
+            ->expects(self::once())
+            ->method('visitFloatValue')
+            ->with(12.34);
+
+        $value->acceptValueVisitor($visitor);
     }
 }

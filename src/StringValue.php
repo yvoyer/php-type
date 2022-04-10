@@ -54,6 +54,11 @@ final class StringValue implements Value
         return mb_strlen($this->value) === 0;
     }
 
+    public function acceptValueVisitor(ValueVisitor $visitor): void
+    {
+        $visitor->visitStringValue($this->value);
+    }
+
     public static function fromString(string $value): Value
     {
         return new self($value);
