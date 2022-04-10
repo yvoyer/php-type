@@ -36,6 +36,11 @@ final class BooleanValue implements Value
         return false;
     }
 
+    public function acceptValueVisitor(ValueVisitor $visitor): void
+    {
+        $visitor->visitBooleanValue($this->value);
+    }
+
     public static function fromBoolean(bool $value): Value
     {
         return new self($value);

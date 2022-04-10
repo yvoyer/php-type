@@ -45,6 +45,11 @@ final class IntegerValue implements Value
         return false;
     }
 
+    public function acceptValueVisitor(ValueVisitor $visitor): void
+    {
+        $visitor->visitIntegerValue($this->value);
+    }
+
     public static function fromInteger(int $value): Value
     {
         return new self($value);

@@ -28,4 +28,9 @@ final class NullValue implements Value
     {
         return true;
     }
+
+    public function acceptValueVisitor(ValueVisitor $visitor): void
+    {
+        $visitor->visitNullValue();
+    }
 }

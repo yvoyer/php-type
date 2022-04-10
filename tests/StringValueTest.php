@@ -5,6 +5,7 @@ namespace Star\Component\Type\Tests;
 use PHPUnit\Framework\TestCase;
 use Star\Component\Type\NotSupportedTypeConversion;
 use Star\Component\Type\StringValue;
+use Star\Component\Type\ValueVisitor;
 
 final class StringValueTest extends TestCase
 {
@@ -61,5 +62,17 @@ final class StringValueTest extends TestCase
         $this->expectException(NotSupportedTypeConversion::class);
         $this->expectExceptionMessage('Conversion of value "12.34" from "string" to "integer" is not allowed.');
         StringValue::fromString('12.34')->toInteger();
+    }
+
+    public function test_it_should_visit_value(): void
+    {
+        $value = StringValue::fromString('string');
+        $visitor = $this->createMock(ValueVisitor::class);
+        $visitor
+            ->expects(self::once())
+            ->method('visitStringValue')
+            ->with('string');
+
+        $value->acceptValueVisitor($visitor);
     }
 }
