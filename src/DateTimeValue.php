@@ -2,20 +2,36 @@
 
 namespace Star\Component\Type;
 
+use DateTimeImmutable;
 use DateTimeInterface;
 
 final class DateTimeValue implements Value
 {
     private DateTimeInterface $dateTime;
 
-    public function __construct(DateTimeInterface $dateTime)
+    private function __construct(DateTimeInterface $dateTime)
     {
         $this->dateTime = $dateTime;
     }
 
-    public function toString(): string
+    public function acceptValueVisitor(ValueVisitor $visitor): void
     {
-        return $this->dateTime->format(DATE_ISO8601);
+        $visitor->visitObjectValue($this->dateTime);
+    }
+
+    public function isEmpty(): bool
+    {
+        return false;
+    }
+
+    public function toBool(): bool
+    {
+        throw NotSupportedTypeConversion::conversionToBoolean($this->toString(), Value::TYPE_DATE_TIME);
+    }
+
+    public function toDate(): DateTimeInterface
+    {
+        return $this->dateTime;
     }
 
     public function toFloat(): float
@@ -28,18 +44,18 @@ final class DateTimeValue implements Value
         return $this->dateTime->getTimestamp();
     }
 
-    public function toBool(): bool
+    public function toString(): string
     {
-        throw NotSupportedTypeConversion::create($this->toString(), 'datetime', 'boolean');
+        return $this->dateTime->format(DATE_ISO8601);
     }
 
-    public function isEmpty(): bool
+    public static function fromString(string $value): Value
     {
-        return false;
+        return self::fromDateTime(new DateTimeImmutable($value));
     }
 
-    public function acceptValueVisitor(ValueVisitor $visitor): void
+    public static function fromDateTime(DateTimeInterface $value): Value
     {
-        $visitor->visitObjectValue($this->dateTime);
+        return new self($value);
     }
 }

@@ -2,7 +2,9 @@
 
 namespace Star\Component\Type\Tests;
 
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
+use Star\Component\Type\DateTimeValue;
 use Star\Component\Type\NotSupportedValueType;
 use Star\Component\Type\ValueGuesser;
 
@@ -139,5 +141,12 @@ final class ValueGuesserTest extends TestCase
     public function test_it_should_support_null_value(): void
     {
         self::assertSame('', ValueGuesser::fromMixed(null)->toString());
+    }
+
+    public function test_it_should_guess_date_time(): void
+    {
+        $value = ValueGuesser::fromMixed(new DateTimeImmutable('2000-01-01 12:34:56'));
+        self::assertInstanceOf(DateTimeValue::class, $value);
+        self::assertSame('2000-01-01 12:34:56', $value->toDate()->format('Y-m-d H:i:s'));
     }
 }

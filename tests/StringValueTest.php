@@ -47,7 +47,7 @@ final class StringValueTest extends TestCase
     public function test_it_should_not_allow_conversion_to_bool(): void
     {
         $this->expectException(NotSupportedTypeConversion::class);
-        $this->expectExceptionMessage('Conversion of value "string" from "string" to "bool" is not allowed.');
+        $this->expectExceptionMessage('Conversion of value "string" from "string" to "boolean" is not allowed.');
         StringValue::fromString('string')->toBool();
     }
 
@@ -74,5 +74,20 @@ final class StringValueTest extends TestCase
             ->with('string');
 
         $value->acceptValueVisitor($visitor);
+    }
+
+    public function test_it_should_not_allow_conversion_to_date(): void
+    {
+        $this->expectException(NotSupportedTypeConversion::class);
+        $this->expectExceptionMessage('Conversion of value "132" from "string" to "datetime" is not allowed.');
+        StringValue::fromString('132')->toDate();
+    }
+
+    public function test_it_should_allow_conversion_to_date(): void
+    {
+        self::assertSame(
+            '2000-10-01 12:34:56',
+            StringValue::fromString('2000-10-01 12:34:56')->toDate()->format('Y-m-d H:i:s')
+        );
     }
 }

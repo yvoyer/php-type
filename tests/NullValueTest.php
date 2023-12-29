@@ -36,7 +36,7 @@ final class NullValueTest extends TestCase
     {
         $value = new NullValue();
         $this->expectException(NotSupportedTypeConversion::class);
-        $this->expectExceptionMessage('Conversion of value "NULL" from "null" to "bool" is not allowed.');
+        $this->expectExceptionMessage('Conversion of value "NULL" from "null" to "boolean" is not allowed.');
         $value->toBool();
     }
 
@@ -49,5 +49,12 @@ final class NullValueTest extends TestCase
             ->method('visitNullValue');
 
         $value->acceptValueVisitor($visitor);
+    }
+
+    public function test_it_should_not_allow_conversion_to_date(): void
+    {
+        $this->expectException(NotSupportedTypeConversion::class);
+        $this->expectExceptionMessage('Conversion of value "NULL" from "null" to "datetime" is not allowed.');
+        (new NullValue())->toDate();
     }
 }

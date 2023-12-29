@@ -18,4 +18,34 @@ final class NotSupportedTypeConversion extends RuntimeException
             )
         );
     }
+
+    public static function conversionToBoolean(string $value, string $from): self
+    {
+        return self::create($value, $from, Value::TYPE_BOOLEAN);
+    }
+
+    public static function conversionToDate(string $value, string $from): self
+    {
+        return self::create($value, $from, Value::TYPE_DATE_TIME);
+    }
+
+    public static function conversionToFloat(string $value, string $from): self
+    {
+        return self::create($value, $from, Value::TYPE_FLOAT);
+    }
+
+    public static function conversionToInteger(string $value, string $from): self
+    {
+        return self::create($value, $from, Value::TYPE_INTEGER);
+    }
+
+    public static function conversionToNull(string $value, string $from): self
+    {
+        return self::create($value, $from, Value::TYPE_NULL);
+    }
+
+    public static function conversionToString(string $value, string $from): self
+    {
+        return self::create($value, $from, Value::TYPE_STRING);
+    }
 }

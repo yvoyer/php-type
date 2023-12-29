@@ -21,7 +21,7 @@ final class IntegerValueTest extends TestCase
     public function test_it_should_not_allow_conversion_to_bool_when_not_one_or_zero(): void
     {
         $this->expectException(NotSupportedTypeConversion::class);
-        $this->expectExceptionMessage('Conversion of value "2" from "integer" to "bool" is not allowed.');
+        $this->expectExceptionMessage('Conversion of value "2" from "integer" to "boolean" is not allowed.');
         IntegerValue::fromInteger(2)->toBool();
     }
 
@@ -41,5 +41,12 @@ final class IntegerValueTest extends TestCase
             ->with(123);
 
         $value->acceptValueVisitor($visitor);
+    }
+
+    public function test_it_should_not_allow_conversion_to_date(): void
+    {
+        $this->expectException(NotSupportedTypeConversion::class);
+        $this->expectExceptionMessage('Conversion of value "12" from "integer" to "datetime" is not allowed.');
+        IntegerValue::fromInteger(12)->toDate();
     }
 }

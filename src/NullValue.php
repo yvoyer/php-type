@@ -2,26 +2,13 @@
 
 namespace Star\Component\Type;
 
+use DateTimeInterface;
+
 final class NullValue implements Value
 {
-    public function toString(): string
+    public function acceptValueVisitor(ValueVisitor $visitor): void
     {
-        return '';
-    }
-
-    public function toFloat(): float
-    {
-        throw NotSupportedTypeConversion::create('NULL', 'null', 'float');
-    }
-
-    public function toInteger(): int
-    {
-        throw NotSupportedTypeConversion::create('NULL', 'null', 'integer');
-    }
-
-    public function toBool(): bool
-    {
-        throw NotSupportedTypeConversion::create('NULL', 'null', 'bool');
+        $visitor->visitNullValue();
     }
 
     public function isEmpty(): bool
@@ -29,8 +16,28 @@ final class NullValue implements Value
         return true;
     }
 
-    public function acceptValueVisitor(ValueVisitor $visitor): void
+    public function toBool(): bool
     {
-        $visitor->visitNullValue();
+        throw NotSupportedTypeConversion::conversionToBoolean('NULL', self::TYPE_NULL);
+    }
+
+    public function toDate(): DateTimeInterface
+    {
+        throw NotSupportedTypeConversion::conversionToDate('NULL', self::TYPE_NULL);
+    }
+
+    public function toFloat(): float
+    {
+        throw NotSupportedTypeConversion::conversionToFloat('NULL', self::TYPE_NULL);
+    }
+
+    public function toInteger(): int
+    {
+        throw NotSupportedTypeConversion::conversionToInteger('NULL', self::TYPE_NULL);
+    }
+
+    public function toString(): string
+    {
+        return '';
     }
 }
