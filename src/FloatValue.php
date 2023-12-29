@@ -2,6 +2,7 @@
 
 namespace Star\Component\Type;
 
+use DateTimeInterface;
 use function strval;
 use function trim;
 
@@ -17,9 +18,24 @@ final class FloatValue implements Value
         $this->value = $value;
     }
 
-    public function toString(): string
+    public function acceptValueVisitor(ValueVisitor $visitor): void
     {
-        return strval($this->value);
+        $visitor->visitFloatValue($this->value);
+    }
+
+    public function isEmpty(): bool
+    {
+        return false;
+    }
+
+    public function toBool(): bool
+    {
+        throw NotSupportedTypeConversion::conversionToBoolean($this->toString(), self::TYPE_FLOAT);
+    }
+
+    public function toDate(): DateTimeInterface
+    {
+        throw NotSupportedTypeConversion::conversionToDate($this->toString(), self::TYPE_FLOAT);
     }
 
     public function toFloat(): float
@@ -33,22 +49,12 @@ final class FloatValue implements Value
             return (int) $this->value;
         }
 
-        throw NotSupportedTypeConversion::create($this->toString(), 'float', 'integer');
+        throw NotSupportedTypeConversion::conversionToInteger($this->toString(), self::TYPE_FLOAT);
     }
 
-    public function toBool(): bool
+    public function toString(): string
     {
-        throw NotSupportedTypeConversion::create($this->toString(), 'float', 'bool');
-    }
-
-    public function isEmpty(): bool
-    {
-        return false;
-    }
-
-    public function acceptValueVisitor(ValueVisitor $visitor): void
-    {
-        $visitor->visitFloatValue($this->value);
+        return strval($this->value);
     }
 
     public static function fromFloat(float $value): Value

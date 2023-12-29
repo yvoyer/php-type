@@ -2,10 +2,11 @@
 
 namespace Star\Component\Type;
 
+use DateTimeInterface;
 use function get_class;
 use function gettype;
 use function is_bool;
-use function is_float;
+use function is_null;
 use function is_numeric;
 use function is_object;
 use function is_string;
@@ -19,7 +20,7 @@ final class ValueGuesser
      */
     public static function fromMixed($value): Value
     {
-        if (\is_null($value)) {
+        if (is_null($value)) {
             return new NullValue();
         }
 
@@ -37,6 +38,10 @@ final class ValueGuesser
 
         if (is_string($value)) {
             return StringValue::fromString($value);
+        }
+
+        if ($value instanceof DateTimeInterface) {
+            return DateTimeValue::fromDateTime($value);
         }
 
         $type = gettype($value);

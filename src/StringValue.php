@@ -2,6 +2,9 @@
 
 namespace Star\Component\Type;
 
+use DateTimeImmutable;
+use DateTimeInterface;
+use Throwable;
 use function floatval;
 use function in_array;
 use function intval;
@@ -17,27 +20,14 @@ final class StringValue implements Value
         $this->value = $value;
     }
 
-    public function toString(): string
+    public function acceptValueVisitor(ValueVisitor $visitor): void
     {
-        return $this->value;
+        $visitor->visitStringValue($this->value);
     }
 
-    public function toFloat(): float
+    public function isEmpty(): bool
     {
-        if (is_numeric($this->value)) {
-            return floatval($this->value);
-        }
-
-        throw NotSupportedTypeConversion::create($this->toString(), 'string', 'float');
-    }
-
-    public function toInteger(): int
-    {
-        if (is_numeric($this->value) && (int) $this->value == $this->value) {
-            return intval($this->value);
-        }
-
-        throw NotSupportedTypeConversion::create($this->toString(), 'string', 'integer');
+        return mb_strlen($this->value) === 0;
     }
 
     public function toBool(): bool
@@ -46,17 +36,39 @@ final class StringValue implements Value
             return (bool) $this->value;
         }
 
-        throw NotSupportedTypeConversion::create($this->toString(), 'string', 'bool');
+        throw NotSupportedTypeConversion::conversionToBoolean($this->toString(), self::TYPE_STRING);
     }
 
-    public function isEmpty(): bool
+    public function toDate(): DateTimeInterface
     {
-        return mb_strlen($this->value) === 0;
+        try {
+            return new DateTimeImmutable($this->value);
+        } catch (Throwable $exception) {
+            throw NotSupportedTypeConversion::conversionToDate($this->toString(), self::TYPE_STRING);
+        }
     }
 
-    public function acceptValueVisitor(ValueVisitor $visitor): void
+    public function toFloat(): float
     {
-        $visitor->visitStringValue($this->value);
+        if (is_numeric($this->value)) {
+            return floatval($this->value);
+        }
+
+        throw NotSupportedTypeConversion::conversionToFloat($this->toString(), self::TYPE_STRING);
+    }
+
+    public function toInteger(): int
+    {
+        if (is_numeric($this->value) && (int) $this->value == $this->value) {
+            return intval($this->value);
+        }
+
+        throw NotSupportedTypeConversion::conversionToInteger($this->toString(), self::TYPE_STRING);
+    }
+
+    public function toString(): string
+    {
+        return $this->value;
     }
 
     public static function fromString(string $value): Value

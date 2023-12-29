@@ -2,6 +2,7 @@
 
 namespace Star\Component\Type;
 
+use DateTimeInterface;
 use function boolval;
 use function floatval;
 use function in_array;
@@ -16,9 +17,28 @@ final class IntegerValue implements Value
         $this->value = $value;
     }
 
-    public function toString(): string
+    public function acceptValueVisitor(ValueVisitor $visitor): void
     {
-        return strval($this->value);
+        $visitor->visitIntegerValue($this->value);
+    }
+
+    public function isEmpty(): bool
+    {
+        return false;
+    }
+
+    public function toBool(): bool
+    {
+        if (in_array($this->value, [1, 0])) {
+            return boolval($this->value);
+        }
+
+        throw NotSupportedTypeConversion::conversionToBoolean($this->toString(), self::TYPE_INTEGER);
+    }
+
+    public function toDate(): DateTimeInterface
+    {
+        throw NotSupportedTypeConversion::conversionToDate($this->toString(), self::TYPE_INTEGER);
     }
 
     public function toFloat(): float
@@ -31,23 +51,9 @@ final class IntegerValue implements Value
         return $this->value;
     }
 
-    public function toBool(): bool
+    public function toString(): string
     {
-        if (in_array($this->value, [1, 0])) {
-            return boolval($this->value);
-        }
-
-        throw NotSupportedTypeConversion::create($this->toString(), 'integer', 'bool');
-    }
-
-    public function isEmpty(): bool
-    {
-        return false;
-    }
-
-    public function acceptValueVisitor(ValueVisitor $visitor): void
-    {
-        $visitor->visitIntegerValue($this->value);
+        return strval($this->value);
     }
 
     public static function fromInteger(int $value): Value

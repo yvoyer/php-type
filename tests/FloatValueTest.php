@@ -19,7 +19,7 @@ final class FloatValueTest extends TestCase
     public function test_should_not_allow_conversion_to_bool_when_not_zero_or_one(): void
     {
         $this->expectException(NotSupportedTypeConversion::class);
-        $this->expectExceptionMessage('Conversion of value "12.34" from "float" to "bool" is not allowed.');
+        $this->expectExceptionMessage('Conversion of value "12.34" from "float" to "boolean" is not allowed.');
         FloatValue::fromFloat(12.34)->toBool();
     }
 
@@ -45,5 +45,12 @@ final class FloatValueTest extends TestCase
             ->with(12.34);
 
         $value->acceptValueVisitor($visitor);
+    }
+
+    public function test_it_should_not_allow_conversion_to_date(): void
+    {
+        $this->expectException(NotSupportedTypeConversion::class);
+        $this->expectExceptionMessage('Conversion of value "12" from "float" to "datetime" is not allowed.');
+        FloatValue::fromFloat(12)->toDate();
     }
 }

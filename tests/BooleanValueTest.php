@@ -4,6 +4,7 @@ namespace Star\Component\Type\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Star\Component\Type\BooleanValue;
+use Star\Component\Type\NotSupportedTypeConversion;
 use Star\Component\Type\ValueVisitor;
 
 final class BooleanValueTest extends TestCase
@@ -28,5 +29,12 @@ final class BooleanValueTest extends TestCase
             ->with(true);
 
         $value->acceptValueVisitor($visitor);
+    }
+
+    public function test_it_should_not_allow_conversion_to_date(): void
+    {
+        $this->expectException(NotSupportedTypeConversion::class);
+        $this->expectExceptionMessage('Conversion of value "true" from "boolean" to "datetime" is not allowed.');
+        BooleanValue::asTrue()->toDate();
     }
 }
