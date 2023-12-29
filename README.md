@@ -1,5 +1,7 @@
 # PHP type value wrapper
 
+![Build Status](https://github.com/yvoyer/php-type/actions/workflows/Tests.yml/badge.svg)
+
 Basic OOP classes to wrap php basic types conversion behind a common interface.
 
 ## Installation
